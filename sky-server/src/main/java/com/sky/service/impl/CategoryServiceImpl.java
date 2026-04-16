@@ -2,12 +2,16 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
+import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import org.springframework.beans.BeanUtils;
@@ -19,8 +23,13 @@ import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private DishMapper DishMapper;
+    @Autowired
+    private SetmealMapper SetmealMapper;
 
     /**
      * 修改分类
@@ -93,6 +102,17 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public void delete(Long id) {
+
+        Integer count1 = DishMapper.countByCategoryId(id);
+        if (count1 > 0){
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+        }
+
+        Integer count2 = SetmealMapper.countByCategoryId(id);
+        if (count2 > 0){
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+        }
+
         categoryMapper.delete(id);
     }
 
