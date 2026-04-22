@@ -101,7 +101,7 @@ public class SetmealController {
     @PostMapping("/status/{status}")
     @ApiOperation("套餐起售停售")
     @CacheEvict(cacheNames = "setmealCache", allEntries = true)
-    public Result startOrStop(@PathVariable Integer status, Long id) {
+    public Result startOrStop(@PathVariable Integer status, @PathVariable Long id) {
         log.info("套餐起售停售：{}, {}", status, id);
         setmealService.startOrStop(status, id);
         return Result.success();
