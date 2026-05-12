@@ -57,6 +57,9 @@ sky:
     appid: ${sky.wechat.appid}
     secret: ${sky.wechat.secret}
 
+  ai-chat:
+    url: ${sky.ai-chat.url:http://localhost:8000}
+
 aliyun:
   oss:
     endpoint: https://oss-cn-beijing.aliyuncs.com

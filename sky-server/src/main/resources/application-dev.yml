@@ -18,3 +18,5 @@ sky:
   wechat:
     appid: wx0ca92e81d5f80eaf
     secret: df7e34d86fe494b819292be9afea33d0
+  ai-chat:
+    url: http://localhost:8000
