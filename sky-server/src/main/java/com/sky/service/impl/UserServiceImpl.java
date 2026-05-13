@@ -69,15 +69,30 @@ public class UserServiceImpl implements UserService {
     }
 
     private String getOpenId(String code) {
-
         Map<String, String> map = new HashMap<>();
         map.put("appid", weChatProperties.getAppid());
         map.put("secret", weChatProperties.getSecret());
         map.put("js_code", code);
         map.put("grant_type", "authorization_code");
+
+        log.info("请求微信接口, appid: {}, code: {}", weChatProperties.getAppid(), code);
         String json = HttpClientUtil.doGet(WX_LOGIN, map);
+        log.info("微信接口返回: {}", json);
+
+        if (json == null || json.isEmpty()) {
+            log.error("微信接口返回为空，可能是网络不通");
+            return null;
+        }
 
         JSONObject jsonObject = JSON.parseObject(json);
+
+        // 检查微信接口是否返回错误
+        Integer errcode = jsonObject.getInteger("errcode");
+        if (errcode != null && errcode != 0) {
+            log.error("微信接口错误, errcode: {}, errmsg: {}", errcode, jsonObject.getString("errmsg"));
+            return null;
+        }
+
         return jsonObject.getString("openid");
     }
 

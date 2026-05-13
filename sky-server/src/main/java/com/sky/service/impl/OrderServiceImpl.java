@@ -202,6 +202,14 @@ public class OrderServiceImpl implements OrderService {
                 BeanUtils.copyProperties(orders, orderVO);
                 orderVO.setOrderDetailList(orderDetails);
 
+                // 拼接订单菜品信息
+                if (orderDetails != null && !orderDetails.isEmpty()) {
+                    String orderDishes = orderDetails.stream()
+                            .map(x -> x.getName() + "*" + x.getNumber() + ";")
+                            .collect(Collectors.joining(""));
+                    orderVO.setOrderDishes(orderDishes);
+                }
+
                 list.add(orderVO);
             }
         }

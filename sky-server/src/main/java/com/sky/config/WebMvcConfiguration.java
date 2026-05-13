@@ -47,6 +47,10 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .addPathPatterns("/user/**")
                 .excludePathPatterns("/user/user/login")
                 .excludePathPatterns("/user/shop/status")
+                .excludePathPatterns("/user/category/list")
+                .excludePathPatterns("/user/dish/list")
+                .excludePathPatterns("/user/setmeal/list")
+                .excludePathPatterns("/user/setmeal/dish/*")
                 .excludePathPatterns("/user/ai-chat/**");
     }
 

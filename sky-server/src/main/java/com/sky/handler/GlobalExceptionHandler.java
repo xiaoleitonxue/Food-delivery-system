@@ -45,4 +45,15 @@ public class GlobalExceptionHandler {
         }
     }
 
+    /**
+     * 捕获所有未处理的异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler
+    public Result exceptionHandler(Exception ex){
+        log.error("未知异常：{}", ex.getMessage(), ex);
+        return Result.error("服务器内部错误");
+    }
+
 }

@@ -51,6 +51,7 @@ public class HttpClientUtil {
 
             //创建GET请求
             HttpGet httpGet = new HttpGet(uri);
+            httpGet.setConfig(builderRequestConfig());
 
             //发送请求
             response = httpClient.execute(httpGet);
@@ -58,12 +59,17 @@ public class HttpClientUtil {
             //判断响应状态
             if(response.getStatusLine().getStatusCode() == 200){
                 result = EntityUtils.toString(response.getEntity(),"UTF-8");
+            } else {
+                result = EntityUtils.toString(response.getEntity(),"UTF-8");
             }
         }catch (Exception e){
             e.printStackTrace();
+            throw new RuntimeException("HTTP请求失败: " + url, e);
         }finally {
             try {
-                response.close();
+                if (response != null) {
+                    response.close();
+                }
                 httpClient.close();
             } catch (IOException e) {
                 e.printStackTrace();

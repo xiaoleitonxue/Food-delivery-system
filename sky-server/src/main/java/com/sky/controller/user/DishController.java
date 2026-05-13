@@ -37,18 +37,27 @@ public class DishController {
     public Result<List<DishVO>> list(Long categoryId) {
 
         String key = "dish_" + categoryId;
-        List<DishVO> list = (List<DishVO>)redisTemplate.opsForValue().get(key);
-        if (list != null && list.size() > 0) {
-            return Result.success(list);
-        }
 
+        try {
+            List<DishVO> list = (List<DishVO>)redisTemplate.opsForValue().get(key);
+            if (list != null && list.size() > 0) {
+                return Result.success(list);
+            }
+        } catch (Exception e) {
+            log.warn("Redis读取失败，走数据库查询: {}", e.getMessage());
+        }
 
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
         dish.setStatus(StatusConstant.ENABLE);//查询起售中的菜品
 
-        list = dishService.listWithFlavor(dish);
-        redisTemplate.opsForValue().set(key, list);
+        List<DishVO> list = dishService.listWithFlavor(dish);
+
+        try {
+            redisTemplate.opsForValue().set(key, list);
+        } catch (Exception e) {
+            log.warn("Redis写入失败: {}", e.getMessage());
+        }
 
         return Result.success(list);
     }
