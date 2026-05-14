@@ -57,7 +57,7 @@ public class CategoryController {
      */
     @PostMapping("/status/{status}")
     @ApiOperation("启用禁用分类")
-    public Result startOrStop(@PathVariable Integer status, @PathVariable Long id){
+    public Result startOrStop(@PathVariable Integer status, Long id){
         log.info("启用禁用分类：{}", id);
         categoryService.startOrStop(status, id);
         return Result.success();

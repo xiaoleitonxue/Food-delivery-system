@@ -214,6 +214,10 @@ public class ReportServiceImpl implements ReportService {
 
         LocalDate dateBegin = LocalDate.now().minusDays(30);
         LocalDate dateEnd = LocalDate.now().minusDays(1);
+
+        // 设置响应头，触发文件下载
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=business_data_" + dateBegin + "_" + dateEnd + ".xlsx");
         LocalDateTime begin = LocalDateTime.of(dateBegin, LocalTime.MIN);
         LocalDateTime end = LocalDateTime.of(dateEnd, LocalTime.MAX);
         BusinessDataVO businessData = workspaceService.getBusinessData(begin, end);
